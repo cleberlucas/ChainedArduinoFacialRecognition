@@ -1,6 +1,8 @@
 import cv2
 import tkinter as tk
 from PIL import Image, ImageTk
+import serial
+arduino = serial.Serial('COM6', 9600)
 
 video_capture = cv2.VideoCapture(0)
 
@@ -45,12 +47,16 @@ def detectar_e_desenhar_rostos(frame):
                 break
 
         if cadastrado:
-
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             cv2.putText(frame, "Cadastrado", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+            arduino.write(b'0')
+            print('0')
         else:
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
-            cv2.putText(frame, "Não Cadastrado", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+            cv2.putText(frame, "Nao Cadastrado", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+            arduino.write(b'1')
+            print('1')
+
 
 def cadastrar_rosto():
     global frame_atual
